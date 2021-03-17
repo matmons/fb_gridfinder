@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 import predict_grid
-import convert_array_to_raster
+import create_raster_from_array
 
 road_weights = {
     'primary': 0.1,
@@ -51,6 +51,11 @@ for dataset in datasets:
             file.write(result_line)
             file.close()
 
+            # Create GeoTIFF
+            output = f'results/{country}/{bv_threshold}_pred_paths.tif'
+            create_raster_from_array(bv_path, output, results['paths'])
+
+            # Create plot comparison of predicted grid and validation grid
             valid_plot = np.array(Image.open(f'datasets/{country}/grid.tif'))
             valid_plot = (lambda x: x > 0)(valid_plot) * 1
             plt.figure(figsize=(20, 12))
